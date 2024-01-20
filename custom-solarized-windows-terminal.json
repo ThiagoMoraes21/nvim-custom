@@ -1,0 +1,24 @@
+// Custom Windows Terminal Solarized Dark Settings
+{
+    "background": "#001E27",
+    "black": "#002831",
+    "blue": "#2176C7",
+    "brightBlack": "#006488",
+    "brightBlue": "#178EC8",
+    "brightCyan": "#00B39E",
+    "brightGreen": "#51EF84",
+    "brightPurple": "#E24D8E",
+    "brightRed": "#F5163B",
+    "brightWhite": "#FCF4DC",
+    "brightYellow": "#B27E28",
+    "cursorColor": "#FFFFFF",
+    "cyan": "#259286",
+    "foreground": "#9CC2C3",
+    "green": "#6CBE6C",
+    "name": "Solarized Dark Higher Contrast",
+    "purple": "#C61C6F",
+    "red": "#DC322F",
+    "selectionBackground": "#003748",
+    "white": "#EAE3CB",
+    "yellow": "#A57706"
+}
