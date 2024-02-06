@@ -1,4 +1,4 @@
-return {
+local solarizedOsaca = {
   -- add solarized-osaka
   {
     "craftzdog/solarized-osaka.nvim",
@@ -18,3 +18,21 @@ return {
   },
 
 }
+
+local tokyoNight = {
+  {
+    "folke/tokyonight.nvim",
+    lazy = false,
+    priority = 1000,
+    opts = {},
+  },
+  {
+    "LazyVim/LazyVim",
+    opts = {
+      colorscheme = "tokyonight-night",
+    },
+  }
+}
+
+-- return solarizedOsaca
+return tokyoNight
