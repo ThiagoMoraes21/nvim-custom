@@ -34,5 +34,23 @@ local tokyoNight = {
   }
 }
 
+local catppuccin = {
+  {
+    "catppuccin/nvim",
+    lazy = false,
+    priority = 1000,
+    name = "catppuccin",
+    opts = {},
+  },
+  {
+    "LazyVim/LazyVim",
+    opts = {
+      -- catppuccin-latte, catppuccin-frappe, catppuccin-macchiato, catppuccin-mocha
+      colorscheme = "catppuccin-mocha"
+    }
+  }
+}
+
 -- return solarizedOsaca
-return tokyoNight
+-- return solarizedOsaca
+return catppuccin
