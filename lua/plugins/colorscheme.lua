@@ -40,7 +40,9 @@ local catppuccin = {
     lazy = false,
     priority = 1000,
     name = "catppuccin",
-    opts = {},
+    opts = {
+      transparent_background = true,
+    },
   },
   {
     "LazyVim/LazyVim",
@@ -120,7 +122,7 @@ local customCatputticcin = {
           crust = "#141617",
         },
       },
-      transparent_background = false,
+      transparent_background = true,
       show_end_of_buffer = false,
       integration_default = false,
       integrations = {
@@ -410,7 +412,29 @@ local customCatputticcin = {
     vim.api.nvim_command("colorscheme catppuccin")
   end,
 }
--- return solarizedOsaca
+
+local gruvbox = {
+
+  {
+    "ellisonleao/gruvbox.nvim",
+    lazy = false,
+    priority = 1000,
+    opts = {
+      transparent_mode = true,
+    }
+  },
+
+  -- Configure LazyVim to load solarized-osaka
+  {
+    "LazyVim/LazyVim",
+    opts = {
+      colorscheme = "gruvbox",
+    },
+  },
+
+}
+
 -- return solarizedOsaca
 -- return catppuccin
-return customCatputticcin
+-- return customCatputticcin
+return gruvbox
