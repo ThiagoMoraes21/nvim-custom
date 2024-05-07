@@ -16,7 +16,6 @@ local solarizedOsaca = {
       colorscheme = "solarized-osaka",
     },
   },
-
 }
 
 local tokyoNight = {
@@ -31,7 +30,7 @@ local tokyoNight = {
     opts = {
       colorscheme = "tokyonight-night",
     },
-  }
+  },
 }
 
 local catppuccin = {
@@ -48,11 +47,10 @@ local catppuccin = {
     "LazyVim/LazyVim",
     opts = {
       -- catppuccin-latte, catppuccin-frappe, catppuccin-macchiato, catppuccin-mocha
-      colorscheme = "catppuccin-mocha"
-    }
-  }
+      colorscheme = "catppuccin-mocha",
+    },
+  },
 }
-
 
 local gruvbox = {
 
@@ -62,7 +60,7 @@ local gruvbox = {
     priority = 1000,
     opts = {
       transparent_mode = true,
-    }
+    },
   },
 
   -- Configure LazyVim to load solarized-osaka
@@ -72,10 +70,21 @@ local gruvbox = {
       colorscheme = "gruvbox",
     },
   },
+}
 
+local sonokai = {
+  "sainnhe/sonokai",
+  priority = 1000,
+  config = function()
+    vim.g.sonokai_transparent_background = "1"
+    vim.g.sonokai_enable_italic = "1"
+    vim.g.sonokai_style = "andromeda"
+    vim.cmd.colorscheme("sonokai")
+  end,
 }
 
 -- return solarizedOsaca
-return catppuccin
--- return gruvbox
+-- return catppuccin
+return gruvbox
 -- return tokyoNight
+-- return sonokai
