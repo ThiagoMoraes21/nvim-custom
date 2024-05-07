@@ -19,13 +19,74 @@ require("lazy").setup({
     { import = "lazyvim.plugins.extras.formatting.prettier" },
     { import = "lazyvim.plugins.extras.lang.json" },
     { import = "lazyvim.plugins.extras.lang.markdown" },
-
-    -- commenting this line because eslint is already beign installed by Mason lsp
     -- { import = "lazyvim.plugins.extras.lang.typescript" },
 
-    -- { import = "lazyvim.plugins.extras.ui.mini-animate" },
+    {
+      "williamboman/mason.nvim",
+      opts = {
+        ensure_installed = {
+          -- "eslint-lsp",
+          "typescript-language-server",
+          "stylua",
+          "flake8",
+          "shellcheck",
+          "shfmt",
+        },
+      },
+    },
+
+    -- Use <tab> for completion and snippets (supertab)
+    -- first: disable default <tab> and <s-tab> behavior in LuaSnip
+    {
+      "L3MON4D3/LuaSnip",
+      keys = function()
+        return {}
+      end,
+    },
+    {
+      "hrsh7th/nvim-cmp",
+      dependencies = {
+        "hrsh7th/cmp-emoji",
+      },
+      ---@param opts cmp.ConfigSchema
+      opts = function(_, opts)
+        local has_words_before = function()
+          unpack = unpack or table.unpack
+          local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+          return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+        end
+
+        local luasnip = require("luasnip")
+        local cmp = require("cmp")
+
+        opts.mapping = vim.tbl_extend("force", opts.mapping, {
+          ["<Tab>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.select_next_item()
+            -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable()
+            -- this way you will only jump inside the snippet region
+            elseif luasnip.expand_or_jumpable() then
+              luasnip.expand_or_jump()
+            elseif has_words_before() then
+              cmp.complete()
+            else
+              fallback()
+            end
+          end, { "i", "s" }),
+          ["<S-Tab>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.select_prev_item()
+            elseif luasnip.jumpable(-1) then
+              luasnip.jump(-1)
+            else
+              fallback()
+            end
+          end, { "i", "s" }),
+        })
+      end,
+    },
+    -- { import = "lazyvim.plugins.extras.lang.typescript" },
     -- { import = "lazyvim.plugins.extras.coding.copilot" },
-    -- { import = "lazyvim.plugins.extras.lang.python" },
 
     -- import/override with your plugins
     { import = "plugins" },
@@ -66,11 +127,24 @@ require("lazy").setup({
         "lua",
         "regex",
         "vim",
-        -- "yaml",
-        -- "tsx",
-        -- "typescript",
-        -- "python",
+        "yaml",
+        "tsx",
+        "typescript",
+        "markdown",
+        "markdown_inline",
+        "python",
       },
     },
+  },
+
+  {
+    "nvim-treesitter/nvim-treesitter",
+    opts = function(_, opts)
+      -- add tsx and treesitter
+      vim.list_extend(opts.ensure_installed, {
+        "tsx",
+        "typescript",
+      })
+    end,
   },
 })
