@@ -23,7 +23,13 @@ local tokyoNight = {
     "folke/tokyonight.nvim",
     lazy = false,
     priority = 1000,
-    opts = {},
+    opts = {
+      transparent = true,
+      styles = {
+        sidebars = "transparent",
+        floats = "dark"
+      }
+    },
   },
   {
     "LazyVim/LazyVim",
@@ -106,6 +112,6 @@ local sonokai = {
 
 -- return solarizedOsaca
 -- return catppuccin
-return gruvbox
--- return tokyoNight
+-- return gruvbox
+return tokyoNight
 -- return sonokai
