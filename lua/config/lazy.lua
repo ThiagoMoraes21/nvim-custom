@@ -9,23 +9,19 @@ vim.opt.rtp:prepend(vim.env.LAZY or lazypath)
 
 require("lazy").setup({
   spec = {
-    -- add LazyVim and import its plugins
     {
       "LazyVim/LazyVim",
       import = "lazyvim.plugins",
     },
-    -- import any extras modules here
     { import = "lazyvim.plugins.extras.linting.eslint" },
     { import = "lazyvim.plugins.extras.formatting.prettier" },
     { import = "lazyvim.plugins.extras.lang.json" },
-    -- { import = "lazyvim.plugins.extras.lang.markdown" },
-    -- { import = "lazyvim.plugins.extras.lang.typescript" },
-
     {
       "williamboman/mason.nvim",
       opts = {
         ensure_installed = {
-          -- "eslint-lsp",
+          "cmakelang",
+          "cmakelint",
           "typescript-language-server",
           "stylua",
           "flake8",
@@ -35,6 +31,14 @@ require("lazy").setup({
       },
     },
 
+    {
+      "neovim/nvim-lspconfig",
+      opts = {
+        servers = {
+          neocmake = {},
+        },
+      },
+    },
     -- Use <tab> for completion and snippets (supertab)
     -- first: disable default <tab> and <s-tab> behavior in LuaSnip
     {
@@ -60,7 +64,7 @@ require("lazy").setup({
         local cmp = require("cmp")
 
         opts.mapping = vim.tbl_extend("force", opts.mapping, {
-          ["<Tab>"] = cmp.mapping(function(fallback)
+          ["<Tab>"] = cmp.mapping({ "i", "s" }, function(fallback)
             if cmp.visible() then
               cmp.select_next_item()
             -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable()
@@ -72,7 +76,7 @@ require("lazy").setup({
             else
               fallback()
             end
-          end, { "i", "s" }),
+          end),
           ["<S-Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
               cmp.select_prev_item()
@@ -120,13 +124,46 @@ require("lazy").setup({
   -- add more treesitter parsers
   {
     "nvim-treesitter/nvim-treesitter",
+    version = false, -- last release is way too old and doesn't work on Windows
+    build = ":TSUpdate",
+    event = { "LazyFile", "VeryLazy" },
+    lazy = vim.fn.argc(-1) == 0, -- load treesitter early when opening a file from the cmdline
+    init = function(plugin)
+      -- PERF: add nvim-treesitter queries to the rtp and it's custom query predicates early
+      -- This is needed because a bunch of plugins no longer `require("nvim-treesitter")`, which
+      -- no longer trigger the **nvim-treesitter** module to be loaded in time.
+      -- Luckily, the only things that those plugins need are the custom queries, which we make available
+      -- during startup.
+      require("lazy.core.loader").add_to_rtp(plugin)
+      require("nvim-treesitter.query_predicates")
+    end,
+    cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
+    keys = {
+      { "<c-space>", desc = "Increment Selection" },
+      { "<bs>", desc = "Decrement Selection", mode = "x" },
+    },
+    opts_extend = { "ensure_installed" },
     opts = {
+      hightlight = {
+        enalle = true,
+        additional_vim_regex_highlighting = false,
+      },
+      indent = { enable = true },
       ensure_installed = {
+        "bash",
+        "diff",
+        "c",
+        "cmake",
+        "printf",
         "javascript",
         "json",
         "lua",
+        "luadoc",
+        "luap",
         "regex",
+        "query",
         "vim",
+        "vimdoc",
         "yaml",
         "tsx",
         "typescript",
@@ -135,6 +172,31 @@ require("lazy").setup({
         "python",
       },
     },
+    incremental_selection = {
+      enable = true,
+      keymaps = {
+        init_selection = "<C-space>",
+        node_incremental = "<C-space>",
+        scope_incremental = false,
+        node_decremental = "<bs>",
+      },
+    },
+    textobjects = {
+      move = {
+        enable = true,
+        goto_next_start = { ["]f"] = "@function.outer", ["]c"] = "@class.outer", ["]a"] = "@parameter.inner" },
+        goto_next_end = { ["]F"] = "@function.outer", ["]C"] = "@class.outer", ["]A"] = "@parameter.inner" },
+        goto_previous_start = { ["[f"] = "@function.outer", ["[c"] = "@class.outer", ["[a"] = "@parameter.inner" },
+        goto_previous_end = { ["[F"] = "@function.outer", ["[C"] = "@class.outer", ["[A"] = "@parameter.inner" },
+      },
+    },
+    ---@param opts TSConfig
+    config = function(_, opts)
+      if type(opts.ensure_installed) == "table" then
+        opts.ensure_installed = LazyVim.dedup(opts.ensure_installed)
+      end
+      require("nvim-treesitter.configs").setup(opts)
+    end,
   },
 
   {
@@ -147,4 +209,5 @@ require("lazy").setup({
       })
     end,
   },
+
 })

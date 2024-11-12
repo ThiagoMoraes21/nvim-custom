@@ -113,5 +113,5 @@ local sonokai = {
 -- return solarizedOsaca
 -- return catppuccin
 -- return gruvbox
-return tokyoNight
--- return sonokai
+-- return tokyoNight
+return sonokai
